@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
+import './Files.css';
 
 class File extends Component {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        console.log("Hello");
+    }
+
     render() {
         return (
-            <div className="file">
+            <div className="file" onClick={this.handleClick}>
               {this.props.name} {this.props.size}
             </div>
         );
