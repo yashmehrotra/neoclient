@@ -1,41 +1,45 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import './Files.css';
-
-class File extends Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick() {
-        console.log("Hello");
-    }
-
-    render() {
-        return (
-            <div className="file" onClick={this.handleClick}>
-              {this.props.name} {this.props.size}
-            </div>
-        );
-    }
-}
-
 class Files extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             error: null,
             isLoaded: false,
             items: []
+        };
+        this.uploadBtn = React.createRef();
+        this.uploadFiles = this.uploadFiles.bind(this);
+    }
+
+    handleClick(file) {
+        if (file.is_dir) {
+            this.getFiles(file.full_path);
         }
     }
 
-    renderFile(name, size) {
-        return <File name={name} size={size} />;
+    uploadFiles() {
+        const form = new FormData();
+        const file = this.uploadBtn.current.files[0];
+        form.append("file[]", file);
+        fetch('http://localhost:8080/api/v1/put', {
+            method: 'PUT',
+            body: form
+        })
+        .then(response => response.json())
+        .then(success => console.log(success))
+        .catch(error => console.log(error));
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/api/v1/list")
+        const { match } = this.props;
+        console.log(match);
+        this.getFiles();
+    }
+
+    getFiles(path='/') {
+        fetch(`http://localhost:8080/api/v1/list?path=${path}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -52,22 +56,28 @@ class Files extends Component {
                 }
             )
     }
-    getFiles() {}
 
     render() {
-        //const fileList = [{'name': 'A', 'size': '10MB'}, {'name': 'B', 'size': '2.1GB'}];
-        //const filesDiv = fileList.map(f => this.renderFile(f['name'], f['size']));
-
         const { error, isLoaded, items } = this.state;
         if (error) {
             return <div> Error: {error.message}</div>;
         } else if (!isLoaded) {
             return <div> Loading ... </div>;
         } else {
-            const filesDiv = items.map(f => this.renderFile(f.name, f.human_size));
             return (
-                <div className="Files">
-                  {filesDiv}
+                <div>
+                    <input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />
+                    <ul className="Files">
+                        {
+                            items.map(f => (
+                                <li key={f.name} className="file">
+                                    <Link to={f.name}>
+                                        {f.name} <small>{f.is_dir ? '' : f.human_size}</small>
+                                    </Link>
+                                </li>
+                            ))
+                        }
+                    </ul>
                 </div>
             );
         }
