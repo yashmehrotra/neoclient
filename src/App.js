@@ -12,7 +12,7 @@ function App(props) {
         <div className="header">
             Neoclient
         </div>
-        <Route exact path="/" component={Files} />
+        <Route component={Files} />
       </div>
     </Router>
   );

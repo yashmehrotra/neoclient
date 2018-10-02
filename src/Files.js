@@ -13,12 +13,6 @@ class Files extends Component {
         this.uploadFiles = this.uploadFiles.bind(this);
     }
 
-    handleClick(file) {
-        if (file.is_dir) {
-            this.getFiles(file.full_path);
-        }
-    }
-
     uploadFiles() {
         const form = new FormData();
         const file = this.uploadBtn.current.files[0];
@@ -33,9 +27,15 @@ class Files extends Component {
     }
 
     componentDidMount() {
-        const { match } = this.props;
-        console.log(match);
-        this.getFiles();
+        this.getFiles(this.props.location.pathname);
+    }
+
+    shouldComponentUpdate(nextProps) {
+        const { location } = nextProps;
+        if (this.props.location.pathname !== location.pathname) {
+            this.getFiles(location.pathname);
+        }
+        return true;
     }
 
     getFiles(path='/') {
@@ -59,6 +59,7 @@ class Files extends Component {
 
     render() {
         const { error, isLoaded, items } = this.state;
+        const pathname = this.props.location.pathname === '/' ? "" : this.props.location.pathname;
         if (error) {
             return <div> Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -66,14 +67,16 @@ class Files extends Component {
         } else {
             return (
                 <div>
-                    <input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />
+                    {/*<input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />*/}
                     <ul className="Files">
                         {
                             items.map(f => (
                                 <li key={f.name} className="file">
-                                    <Link to={f.name}>
+                                {f.is_dir ? (
+                                    <Link to={`${pathname}/${f.name}`}>
                                         {f.name} <small>{f.is_dir ? '' : f.human_size}</small>
                                     </Link>
+                                ) : <div>{f.name} <small>{f.is_dir ? '' : f.human_size}</small></div>}
                                 </li>
                             ))
                         }
