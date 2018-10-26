@@ -6,6 +6,16 @@
     cursor: pointer;
 }
 
-.download {
+.files {
+    list-style: none;
+}
+
+.image-hai {
+    height: 14px;
+    margin-right: 4px;
+}
+
+.download-btn {
     float: right;
+    border-radius: 4px;
 }

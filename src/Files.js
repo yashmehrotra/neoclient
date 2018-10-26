@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import download from 'downloadjs';
 import './Files.css';
 class Files extends Component {
     constructor(props) {
@@ -23,6 +24,15 @@ class Files extends Component {
         })
         .then(response => response.json())
         .then(success => console.log(success))
+        .catch(error => console.log(error));
+    }
+
+    downloadFile(path) {
+        const pathname = this.props.location.pathname === '/' ? "" : this.props.location.pathname;
+        const name = path.replace(`${pathname}/`, "");
+        fetch(`http://localhost:8080/api/v1/get?path=${path}`)
+        .then(response => response.blob())
+        .then(response => download(response, name, response.type))
         .catch(error => console.log(error));
     }
 
@@ -68,15 +78,19 @@ class Files extends Component {
             return (
                 <div>
                     {/*<input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />*/}
-                    <ul className="Files">
+                    <ul className="files">
                         {
                             items.map(f => (
                                 <li key={f.name} className="file">
-                                {f.is_dir ? (
-                                    <Link to={`${pathname}/${f.name}`}>
-                                        {f.name} <small>{f.is_dir ? '' : f.human_size}</small>
-                                    </Link>
-                                ) : <div>{f.name} <small>{f.is_dir ? '' : f.human_size}</small></div>}
+                                    {f.is_dir ? (
+                                        <Link to={`${pathname}/${f.name}`}>
+                                            <img src="folder.jpg" class="image-hai" /> {f.name}
+                                        </Link>
+                                    ) : (
+                                        <div>
+                                            <img src="file.jpg" class="image-hai" />{f.name} <small>{f.human_size}</small><button onClick={() => this.downloadFile(`${pathname}/${f.name}`)} className="download-btn">Download</button>
+                                        </div>
+                                    )}
                                 </li>
                             ))
                         }
