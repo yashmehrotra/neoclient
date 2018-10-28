@@ -12,25 +12,26 @@ class Files extends Component {
         };
         this.uploadBtn = React.createRef();
         this.uploadFiles = this.uploadFiles.bind(this);
+        this.host = 'https://neo.yashmehrotra.com';
     }
 
     uploadFiles() {
         const form = new FormData();
         const file = this.uploadBtn.current.files[0];
         form.append("file[]", file);
-        fetch('http://localhost:8080/api/v1/put', {
+        fetch(`${this.host}/api/v1/put`, {
             method: 'PUT',
             body: form
         })
         .then(response => response.json())
-        .then(success => console.log(success))
+        .then(success => alert("Uploaded"))
         .catch(error => console.log(error));
     }
 
     downloadFile(path) {
         const pathname = this.props.location.pathname === '/' ? "" : this.props.location.pathname;
         const name = path.replace(`${pathname}/`, "");
-        fetch(`http://localhost:8080/api/v1/get?path=${path}`)
+        fetch(`${this.host}/api/v1/get?path=${path}`)
         .then(response => response.blob())
         .then(response => download(response, name, response.type))
         .catch(error => console.log(error));
@@ -49,7 +50,7 @@ class Files extends Component {
     }
 
     getFiles(path='/') {
-        fetch(`http://localhost:8080/api/v1/list?path=${path}`)
+        fetch(`${this.host}/api/v1/list?path=${path}`)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -77,7 +78,7 @@ class Files extends Component {
         } else {
             return (
                 <div>
-                    {/*<input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />*/}
+                    {<input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />}
                     <ul className="files">
                         {
                             items.map(f => (
