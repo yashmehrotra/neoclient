@@ -39,3 +39,7 @@ small {
   color: gray;
   font-size: 0.8em;
 }
+
+.text-center {
+  text-align: center;
+}

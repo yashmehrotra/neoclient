@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import download from 'downloadjs';
 import './Files.css';
+
 class Files extends Component {
     constructor(props) {
         super(props);
@@ -81,19 +82,19 @@ class Files extends Component {
                     {<input type="file" ref={this.uploadBtn} onChange={this.uploadFiles} />}
                     <ul className="files">
                         {
-                            items.map(f => (
+                            items ? items.map(f => (
                                 <li key={f.name} className="file">
                                     {f.is_dir ? (
                                         <Link to={`${pathname}/${f.name}`}>
-                                            <img src="folder.jpg" class="image-hai" /> {f.name}
+                                            <img src="/folder.jpg" alt="folder" className="image-hai" /> {f.name}
                                         </Link>
                                     ) : (
                                         <div>
-                                            <img src="file.jpg" class="image-hai" />{f.name} <small>{f.human_size}</small><button onClick={() => this.downloadFile(`${pathname}/${f.name}`)} className="download-btn">Download</button>
+                                            <img src="/file.jpg" alt="file" className="image-hai" />{f.name} <small>{f.human_size}</small><button onClick={() => this.downloadFile(`${pathname}/${f.name}`)} className="download-btn">Download</button>
                                         </div>
                                     )}
                                 </li>
-                            ))
+                            )) : <li className="text-center">Folder Empty</li>
                         }
                     </ul>
                 </div>
