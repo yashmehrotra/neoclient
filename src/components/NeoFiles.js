@@ -1,26 +1,8 @@
 import React, { Component } from 'react';
-import './Files.css';
+import './NeoFiles.css';
+import { NeoFile } from './NeoFile'
 
-class File extends Component {
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick() {
-        console.log("Hello");
-    }
-
-    render() {
-        return (
-            <div className="file" onClick={this.handleClick}>
-              {this.props.name} {this.props.size}
-            </div>
-        );
-    }
-}
-
-class Files extends Component {
+class NeoFiles extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -30,8 +12,8 @@ class Files extends Component {
         }
     }
 
-    renderFile(name, size) {
-        return <File name={name} size={size} />;
+    renderNeoFile(name, size) {
+        return <NeoFile name={name} size={size} />;
     }
 
     componentDidMount() {
@@ -64,9 +46,9 @@ class Files extends Component {
         } else if (!isLoaded) {
             return <div> Loading ... </div>;
         } else {
-            const filesDiv = items.map(f => this.renderFile(f.name, f.human_size));
+            const filesDiv = items.map(f => this.renderNeoFile(f.name, f.human_size));
             return (
-                <div className="Files">
+                <div className="NeoFiles">
                   {filesDiv}
                 </div>
             );
@@ -74,4 +56,4 @@ class Files extends Component {
     }
 }
 
-export default Files;
+export default NeoFiles;
