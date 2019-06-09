@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import Files from './Files';
-import registerServiceWorker from './registerServiceWorker';
+import "react-image-gallery/styles/css/image-gallery.css";
+// import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<Files />, document.getElementById('root'));
-registerServiceWorker();
+ReactDOM.render(<App />, document.getElementById('root'));
+// registerServiceWorker();
